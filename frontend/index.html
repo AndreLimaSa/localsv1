@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Map with Marker Cluster</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="/node_modules/leaflet/dist/leaflet.css">
+  <!-- Marker Cluster CSS -->
+  <link rel="stylesheet" href="/node_modules/leaflet.markercluster/dist/MarkerCluster.css">
+  <link rel="stylesheet" href="/node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css">
+
+  <!-- Leaflet JS -->
+  <script src="/node_modules/leaflet/dist/leaflet.js"></script>
+  <!-- Marker Cluster JS -->
+  <script src="/node_modules/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+  <!-- Your custom CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="map">
+    <div id="popup-container" class="popup-container"></div>    
+    </div>
+    <div class="top-container">
+        <button class="account-btn" onclick="register()">
+                <i class="fas fa-user"></i>
+            </button>
+            <div class="search-container">
+                <!--<i class="fas fa-search"></i>-->
+                <div class="distance-container">
+                <label for="distanceSlider">
+                    <p>Raio <span id="distanceValue">200</span> km</p>
+                </label>
+                <input type="range" id="distanceSlider" min="1" max="200" value="200" oninput="updateDistanceValue(this.value)">
+                </div>
+            </div>
+            
+    </div>
+
+    
+    <div class="locais-container">
+        <div class="title-filtro"><h1 id="filterTitle">Locais</h1>
+            <button id="filtersbtn" onclick="filterbtn1()"><i class="fa-solid fa-filter"></i></button>
+            <button id="favoritesbtn" onclick="window.location.href='/favorites.html'">
+                <i class="fas fa-star"></i>
+              </button>
+            
+        </div>
+
+        <div id="image-grid">
+        </div>
+        <div class="container-filtros" id="container-filtros">
+            <br><br>
+            <label class="checkbox-btn" for="naturezacheck">
+              <input type="checkbox" id="naturezacheck" name="natureza" value="Natureza" class="filter-checkbox">
+              <i class="fas fa-leaf"></i>
+              <span>Natureza</span>
+            </label>
+            <label class="checkbox-btn" for="culturacheck">
+              <input type="checkbox" id="culturacheck" name="cultura" value="Cultura" class="filter-checkbox">
+              <i class="fas fa-landmark"></i>
+              <span>Cultura</span>
+            </label>
+            <label class="checkbox-btn" for="praiacheck">
+              <input type="checkbox" id="praiacheck" name="praia" value="Praia" class="filter-checkbox">
+              <i class="fas fa-umbrella-beach"></i>
+              <span>Praia</span>
+            </label>
+            <label class="checkbox-btn" for="trilhocheck">
+              <input type="checkbox" id="trilhocheck" name="trilho" value="Trilho" class="filter-checkbox">
+              <i class="fas fa-hiking"></i>
+              <span>Trilho</span>
+            </label>
+            <label class="checkbox-btn" for="merendascheck">
+              <input type="checkbox" id="merendascheck" name="merendas" value="Merendas" class="filter-checkbox">
+              <i class="fas fa-utensils"></i>
+              <span>Merendas</span>
+            </label>
+            <div class="filtros-container-natureza" id="filtros-container-natureza">
+        
+        <h5>Natureza</h5>
+                <h6>Vistas da montanha, relaxe da floresta ou o fresco do rio</h6>
+                <div class="button-group">
+                    <label class="btn btn-left">
+                      <input type="checkbox" id="montanhabtn" class="checkbox" data-type="Montanha" onclick="filterLocations()">
+                      Serra
+                    </label>
+                    <label class="btn btn-middle">
+                      <input type="checkbox" id="florestanat" class="checkbox" data-type="Floresta" onclick="filterLocations()">
+                      Floresta
+                    </label>
+                    <label class="btn btn-right">
+                      <input type="checkbox" class="checkbox" id="rionat" data-type="Rio" onclick="filterLocations()">
+                      Rio
+                    </label>
+                  </div>
+                <!-- Add more filter options here -->
+                <hr>
+                <h5>Atividades</h5>
+                <div class="button-grid">
+                    <label class="checkbox-grid">
+                        <input id="campingchecknatureza" type="checkbox" class="checkboxfilter" data-type="Camping" onclick="filterLocations()">
+                        <span class="checkmark">Camping</span>
+                    </label>
+                    <label class="checkbox-grid">
+                        <input id="fotografiachecknatureza" type="checkbox" class="checkboxfilter" data-type="Fotografia" onclick="filterLocations()">
+                        <span class="checkmark">Fotografia</span>
+                    </label>
+                    <label class="checkbox-grid">
+                        <input id="meditachecknatureza" type="checkbox" class="checkboxfilter" data-type="Meditação" onclick="filterLocations()">
+                        <span class="checkmark">Anti-stress</span>
+                    </label>
+                    <label class="checkbox-grid">
+                        <input id="caminhadachecknatureza" type="checkbox" class="checkboxfilter" data-type="Caminhada" onclick="filterLocations()">
+                        <span class="checkmark">Caminhada</span>
+                    </label>
+                </div>
+                <h5>Características</h5>
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input id="animalnatureza" type="checkbox" class="checkbox" data-type="Animal" onclick="filterLocations()">
+                        
+                        <span>Vida Animal</span>
+                    </label>
+                    <br>
+                    <label class="checkbox-label">
+                        <input id="poucomovnatureza" type="checkbox" class="checkbox" data-type="PoucoMovimento" onclick="filterLocations()">
+                        <span>Pouco Movimento</span>
+                    </label>
+                    <br>
+                    <label class="checkbox-label">
+                        <input id="vistasnatureza" type="checkbox" class="checkbox" data-type="Vistas" onclick="filterLocations()">
+                        <span>Vistas</span>
+                    </label>
+                    <br><br><br><br><br>
+                </div>
+                
+                
+    </div>
+    <div class="filtros-container-cultura" id="filtros-container-cultura">
+        
+        <h5>Cultura</h5>
+                <h6>Vistas da montanha, relaxe da floresta ou o fresco do rio</h6>
+                <div class="button-group">
+                    <label class="btn btn-left">
+                      <input type="checkbox" id="museucul" class="checkbox" data-type="Museu" onclick="filterLocations()">
+                      Museu
+                    </label>
+                    <label class="btn btn-middle">
+                      <input type="checkbox" class="checkbox" id="igrejacul" data-type="Igreja" onclick="filterLocations()">
+                      Igreja
+                    </label>
+                    <label class="btn btn-right">
+                        <input type="checkbox" id="monumentocul" class="checkbox" data-type="Monumento" onclick="filterLocations()">
+                        Monumento
+                      </label>
+                  </div>
+                <!-- Add more filter options here -->
+                <hr>
+                <h5>Atividades</h5>
+                <div class="button-grid">
+                    <label class="checkbox-grid">
+                        <input id="historicocheckcultura" type="checkbox" class="checkbox" data-type="Histórico" onclick="filterLocations()">
+                        <span class="checkmark">Histórico</span>
+                    </label>
+                    <label class="checkbox-grid">
+                        <input id="romanocheckcultura" type="checkbox" class="checkbox" data-type="Romano" onclick="filterLocations()">
+                        <span class="checkmark">Romano</span>
+                    </label>
+                    <label class="checkbox-grid">
+                        <input id="contemporaneocheckcultura" type="checkbox" class="checkbox" data-type="Contemporâneo" onclick="filterLocations()">
+                        <span class="checkmark">Contemporâneo</span>
+                    </label>
+                    <label class="checkbox-grid">
+                        <input id="prehistoricocheckcultura" type="checkbox" class="checkbox" data-type="Pré-Histórico" onclick="filterLocations()">
+                        <span class="checkmark">Pré-Histórico</span>
+                    </label>
+                </div>
+                <h5>Características</h5>
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input id="acessocultura" type="checkbox" class="checkbox" data-type="FácilAcesso" onclick="filterLocations()">
+                        
+                        <span>Fácil Acesso</span>
+                    </label>
+                    <br>
+                    <label class="checkbox-label">
+                        <input id="gratuitocultura" type="checkbox" class="checkbox" data-type="Gratuito" onclick="filterLocations()">
+                        <span>Gratuito</span>
+                    </label>
+                    <br><br><br><br><br>
+                </div>
+    </div>
+    <div class="filtros-container-praia" id="filtros-container-praia">
+        
+        <h5>Praia</h5>
+                <h6>Vistas da montanha, relaxe da floresta ou o fresco do rio</h6>
+                <div class="button-group">
+                    <label class="btn btn-left">
+                      <input type="checkbox" id="riopra" class="checkbox" data-type="Rio" onclick="filterLocations()">
+                      Rio
+                    </label>
+                    <label class="btn btn-middle">
+                      <input type="checkbox" id="marpra" class="checkbox" data-type="Mar" onclick="filterLocations()">
+                      Mar
+                    </label>
+                    <label class="btn btn-right">
+                      <input type="checkbox" class="checkbox" id="cascatapra" data-type="Cascata" onclick="filterLocations()">
+                      Cascata
+                    </label>
+                  </div>
+                <!-- Add more filter options here -->
+                <hr>
+                <h5>Atividades</h5>
+                <div class="button-grid">
+                    <label class="checkbox-grid">
+                        <input id="banhoscheckpraia" type="checkbox" class="checkbox" data-type="Banhos" onclick="filterLocations()">
+                        <span class="checkmark">Banhos</span>
+                    </label>
+                    <label class="checkbox-grid">
+                        <input id="barcheckpraia" type="checkbox" class="checkbox" data-type="Bar" onclick="filterLocations()">
+                        <span class="checkmark">Bar/Restaurante</span>
+                    </label>
+                    <label class="checkbox-grid">
+                        <input id="desportocheckpraia" type="checkbox" class="checkbox" data-type="Desporto" onclick="filterLocations()">
+                        <span class="checkmark">Desporto</span>
+                    </label>
+                    <label class="checkbox-grid">
+                        <input id="caminhadacheckpraia" type="checkbox" class="checkbox" data-type="Caminhada" onclick="filterLocations()">
+                        <span class="checkmark">Caminhada</span>
+                    </label>
+                </div>
+                <h5>Características</h5>
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input id="aceitacaes" type="checkbox" class="checkbox" data-type="AceitaCaes" onclick="filterLocations()">
+                        
+                        <span>Aceita Cães</span>
+                    </label>
+                    <br>
+                    <label class="checkbox-label">
+                        <input id="poucomovepraia" type="checkbox" class="checkbox" data-type="PoucoMovimento" onclick="filterLocations()">
+                        <span>Pouco Movimento</span>
+                    </label>
+                    <br><br><br><br><br>
+                </div>
+    </div>
+    <div class="filtros-container-trilho" id="filtros-container-trilho">
+        
+        <h5>Trilho</h5>
+                <h6>Vistas da montanha, relaxe da floresta ou o fresco do rio</h6>
+                <div class="button-group">
+                    <label class="btn btn-left">
+                      <input type="checkbox" id="faciltri" class="checkbox" data-type="Facil" onclick="filterLocations()">
+                      Fácil
+                    </label>
+                    <label class="btn btn-middle">
+                      <input type="checkbox" id="moderadotri" class="checkbox" data-type="Moderado" onclick="filterLocations()">
+                      Moderado
+                    </label>
+                    <label class="btn btn-right">
+                      <input type="checkbox" class="checkbox" id="dificiltri" data-type="Dificil" onclick="filterLocations()">
+                      Difícil
+                    </label>
+                  </div>
+                <!-- Add more filter options here -->
+                <hr>
+                <h5>Atividades</h5>
+                <div class="button-grid">
+                    <label class="checkbox-grid">
+                        <input id="passadicoschecktrilho" type="checkbox" class="checkbox" data-type="Passadiços" onclick="filterLocations()">
+                        <span class="checkmark">Passadiços</span>
+                    </label>
+                    <label class="checkbox-grid">
+                        <input id="naturezachecktrilho" type="checkbox" class="checkbox" data-type="Natureza" onclick="filterLocations()">
+                        <span class="checkmark">Natureza</span>
+                    </label>
+                    <label class="checkbox-grid">
+                        <input id="beirariochecktrilho" type="checkbox" class="checkbox" data-type="BeiraRio" onclick="filterLocations()">
+                        <span class="checkmark">Beira-Rio</span>
+                    </label>
+                    <label class="checkbox-grid">
+                        <input id="historicochecktrilho" type="checkbox" class="checkbox" data-type="Histórico" onclick="filterLocations()">
+                        <span class="checkmark">Histórico</span>
+                    </label>
+                </div>
+                <h5>Características</h5>
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input id="caminhadatrilho" type="checkbox" class="checkbox" data-type="CaminhadaTrilho" onclick="filterLocations()">
+                        <span>Caminhada</span>
+                    </label>
+                    <br>
+                    <label class="checkbox-label">
+                        <input id="ciclismotrilho" type="checkbox" class="checkbox" data-type="CiclismoTrilho" onclick="filterLocations()">
+                        
+                        <span>Ciclismo de Montanha</span>
+                    </label>
+                    <br>
+                    <label class="checkbox-label">
+                        <input id="corridatrilho" type="checkbox" class="checkbox" data-type="CorridaTrilho" onclick="filterLocations()">
+                        <span>Corrida</span>
+                    </label>
+                    <br>
+                    <label class="checkbox-label">
+                        <input id="sinalizadotrilho" type="checkbox" class="checkbox" data-type="SinalizadoTrilho" onclick="filterLocations()">
+                        <span>Marcações</span>
+                    </label>
+                    <br><br><br><br><br>
+                </div>
+    </div>
+    <div class="filtros-container-merendas" id="filtros-container-merendas">
+        
+        <h5>Piquenique</h5>
+                <h6>Vistas da montanha, relaxe da floresta ou o fresco do rio</h6>
+                <div class="button-group">
+                    <label class="btn btn-left">
+                      <input type="checkbox" id="churrasqueiramer" class="checkbox" data-type="Churrasqueira" onclick="filterLocations()">
+                      Fogareiro
+                    </label>
+                    <label class="btn btn-middle">
+                      <input type="checkbox" id="mesasmer" class="checkbox" data-type="Mesas" onclick="filterLocations()">
+                      Mesas
+                    </label>
+                    <label class="btn btn-right">
+                      <input type="checkbox" class="checkbox" id="aguamer" data-type="Água" onclick="filterLocations()">
+                      Água
+                    </label>
+                  </div>
+                <!-- Add more filter options here -->
+                <hr>
+                <h5>Adequado para</h5>
+                <div class="button-grid">
+                    <label class="checkbox-grid">
+                        <input id="gruposcheckmerendas" type="checkbox" class="checkbox" data-type="Grupos" onclick="filterLocations()">
+                        <span class="checkmark">Grupos</span>
+                    </label>
+                    <label class="checkbox-grid">
+                        <input id="criancascheckmerendas" type="checkbox" class="checkbox" data-type="Crianças" onclick="filterLocations()">
+                        <span class="checkmark">Crianças</span>
+                    </label>
+                    <!--<label class="checkbox-grid">
+                        <input id="meditacheckmerendas" type="checkbox" class="checkbox" data-type="Meditação" onclick="filterLocations()">
+                        <span class="checkmark">Anti-stress</span>
+                    </label>
+                    <label class="checkbox-grid">
+                        <input id="caminhadachecknatureza" type="checkbox" class="checkbox" data-type="Caminhada" onclick="filterLocations()">
+                        <span class="checkmark">Caminhada</span>
+                    </label>
+                </div>
+                <h5>Características</h5>
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input id="animalnatureza" type="checkbox" class="checkbox" data-type="Animal" onclick="filterLocations()">
+                        
+                        <span>Vida Animal</span>
+                    </label>
+                    <br>
+                    <label class="checkbox-label">
+                        <input id="poucomovenatureza" type="checkbox" class="checkbox" data-type="PoucoMovimento" onclick="filterLocations()">
+                        <span>Pouco Movimento</span>
+                    </label>-->
+                    <br><br><br><br><br>
+                </div>
+    </div>
+            
+        </div>
+        <button id="verresultados" onclick="verResultados()">Ver Resultados</button>
+    </div>
+    
+    <div class="filtrosall">
+    <div class="filtros-container-natureza" id="
+    myDIV">
+        
+        <h5>Natureza</h5>
+                <h6>Vistas da montanha, relaxe da floresta ou o fresco do rio</h6>
+                <div class="button-group">
+                    <button id="montanhabtn" class="btn btn-left" data-type="Montanha">Serra</button>
+                    <button class="btn btn-middle" data-type="Floresta">Floresta</button>
+                    <button class="btn btn-right" data-type="Rio">Rio</button>
+                </div>
+                <!-- Add more filter options here -->
+                <hr>
+                <h5>Atividades</h5>
+                <div class="button-grid">
+                    <label class="checkbox-grid">
+                        <input id="campingchecknatureza" type="checkbox" class="checkbox" data-type="Camping" onclick="filterLocations()">
+                        <span class="checkmark">Camping</span>
+                    </label>
+                    <label class="checkbox-grid">
+                        <input id="fotografiachecknatureza" type="checkbox" class="checkbox" data-type="Fotografia" onclick="filterLocations()">
+                        <span class="checkmark">Fotografia</span>
+                    </label>
+                    <label class="checkbox-grid">
+                        <input id="meditachecknatureza" type="checkbox" class="checkbox" data-type="Meditação" onclick="filterLocations()">
+                        <span class="checkmark">Anti-stress</span>
+                    </label>
+                    <label class="checkbox-grid">
+                        <input id="caminhadachecknatureza" type="checkbox" class="checkbox" data-type="Caminhada" onclick="filterLocations()">
+                        <span class="checkmark">Caminhada</span>
+                    </label>
+                </div>
+                <h5>Características</h5>
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input id="animalnatureza" type="checkbox" class="checkbox" data-type="Animal" onclick="filterLocations()">
+                        
+                        <span>Vida Animal</span>
+                    </label>
+                    <br>
+                    <label class="checkbox-label">
+                        <input id="poucomovenatureza" type="checkbox" class="checkbox" data-type="PoucoMovimento" onclick="filterLocations()">
+                        <span>Pouco Movimento</span>
+                    </label>
+                    <br><br><br><br>
+                </div>
+                
+                
+    </div>
+
+    <div class="filtros-container-cultura">
+        
+        <h5>Cultura</h5>
+                <h6>Vistas da montanha, relaxe da floresta ou o fresco do rio</h6>
+                <div class="button-group">
+                    <button id="montanhabtn" class="btn btn-left" data-type="Montanha">Serra</button>
+                    <button class="btn btn-middle" data-type="Floresta">Floresta</button>
+                    <button class="btn btn-right" data-type="Rio">Rio</button>
+                </div>
+                <!-- Add more filter options here -->
+                <hr>
+                <h5>Atividades</h5>
+                <div class="button-grid">
+                    <label class="checkbox-grid">
+                        <input id="campingchecknatureza" type="checkbox" class="checkbox" data-type="Camping" onclick="filterLocations()">
+                        <span class="checkmark">Camping</span>
+                    </label>
+                    <label class="checkbox-grid">
+                        <input id="fotografiachecknatureza" type="checkbox" class="checkbox" data-type="Fotografia" onclick="filterLocations()">
+                        <span class="checkmark">Fotografia</span>
+                    </label>
+                    <label class="checkbox-grid">
+                        <input id="meditachecknatureza" type="checkbox" class="checkbox" data-type="Meditação" onclick="filterLocations()">
+                        <span class="checkmark">Anti-stress</span>
+                    </label>
+                    <label class="checkbox-grid">
+                        <input id="caminhadachecknatureza" type="checkbox" class="checkbox" data-type="Caminhada" onclick="filterLocations()">
+                        <span class="checkmark">Caminhada</span>
+                    </label>
+                </div>
+                <h5>Características</h5>
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input id="animalnatureza" type="checkbox" class="checkbox" data-type="Animal" onclick="filterLocations()">
+                        
+                        <span>Vida Animal</span>
+                    </label>
+                    <br>
+                    <label class="checkbox-label">
+                        <input id="poucomovenatureza" type="checkbox" class="checkbox" data-type="PoucoMovimento" onclick="filterLocations()">
+                        <span>Pouco Movimento</span>
+                    </label>
+                    <br><br><br><br>
+                </div>
+    </div>
+    <div class="filtros-container-praia">
+        
+        <h5>Praia</h5>
+                <h6>Vistas da montanha, relaxe da floresta ou o fresco do rio</h6>
+                <div class="button-group">
+                    <button id="montanhabtn" class="btn btn-left" data-type="Montanha">Serra</button>
+                    <button class="btn btn-middle" data-type="Floresta">Floresta</button>
+                    <button class="btn btn-right" data-type="Rio">Rio</button>
+                </div>
+                <!-- Add more filter options here -->
+                <hr>
+                <h5>Atividades</h5>
+                <div class="button-grid">
+                    <label class="checkbox-grid">
+                        <input id="campingchecknatureza" type="checkbox" class="checkbox" data-type="Camping" onclick="filterLocations()">
+                        <span class="checkmark">Camping</span>
+                    </label>
+                    <label class="checkbox-grid">
+                        <input id="fotografiachecknatureza" type="checkbox" class="checkbox" data-type="Fotografia" onclick="filterLocations()">
+                        <span class="checkmark">Fotografia</span>
+                    </label>
+                    <label class="checkbox-grid">
+                        <input id="meditachecknatureza" type="checkbox" class="checkbox" data-type="Meditação" onclick="filterLocations()">
+                        <span class="checkmark">Anti-stress</span>
+                    </label>
+                    <label class="checkbox-grid">
+                        <input id="caminhadachecknatureza" type="checkbox" class="checkbox" data-type="Caminhada" onclick="filterLocations()">
+                        <span class="checkmark">Caminhada</span>
+                    </label>
+                </div>
+                <h5>Características</h5>
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input id="aceitacaes" type="checkbox" class="checkbox" data-type="AceitaCaes" onclick="filterLocations()">
+                        
+                        <span>Aceita cães</span>
+                    </label>
+                    <br>
+                    <label class="checkbox-label">
+                        <input id="poucomovenatureza" type="checkbox" class="checkbox" data-type="PoucoMovimento" onclick="filterLocations()">
+                        <span>Pouco Movimento</span>
+                    </label>
+                    <br><br><br><br>
+                </div>
+    </div>
+    <div class="filtros-container-trilho">
+        
+        <h5>Trilho</h5>
+                <h6>Vistas da montanha, relaxe da floresta ou o fresco do rio</h6>
+                <div class="button-group">
+                    <button id="montanhabtn" class="btn btn-left" data-type="Montanha">Serra</button>
+                    <button class="btn btn-middle" data-type="Floresta">Floresta</button>
+                    <button class="btn btn-right" data-type="Rio">Rio</button>
+                </div>
+                <!-- Add more filter options here -->
+                <hr>
+                <h5>Atividades</h5>
+                <div class="button-grid">
+                    <label class="checkbox-container">
+                        <input id="campingchecknatureza" type="checkbox" class="checkbox" data-type="Camping" onclick="filterLocations()">
+                        <span class="checkmark">Camping</span>
+                    </label>
+                    <label class="checkbox-container">
+                        <input id="fotografiachecknatureza" type="checkbox" class="checkbox" data-type="Fotografia" onclick="filterLocations()">
+                        <span class="checkmark">Fotografia</span>
+                    </label>
+                    <label class="checkbox-container">
+                        <input id="meditachecknatureza" type="checkbox" class="checkbox" data-type="Meditação" onclick="filterLocations()">
+                        <span class="checkmark">Anti-stress</span>
+                    </label>
+                    <label class="checkbox-container">
+                        <input id="caminhadachecknatureza" type="checkbox" class="checkbox" data-type="Caminhada" onclick="filterLocations()">
+                        <span class="checkmark">Caminhada</span>
+                    </label>
+                </div>
+                <h5>Características</h5>
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input id="animalnatureza" type="checkbox" class="checkbox" data-type="Animal" onclick="filterLocations()">
+                        
+                        <span>Vida Animal</span>
+                    </label>
+                    <br>
+                    <label class="checkbox-label">
+                        <input id="poucomovenatureza" type="checkbox" class="checkbox" data-type="PoucoMovimento" onclick="filterLocations()">
+                        <span>Pouco Movimento</span>
+                    </label>
+                    <br><br><br><br>
+                </div>
+    </div>
+    <div class="filtros-container-merendas">
+        
+        <h5>Piquenique</h5>
+                <h6>Vistas da montanha, relaxe da floresta ou o fresco do rio</h6>
+                <div class="button-group">
+                    <button id="montanhabtn" class="btn btn-left" data-type="Montanha">Serra</button>
+                    <button class="btn btn-middle" data-type="Floresta">Floresta</button>
+                    <button class="btn btn-right" data-type="Rio">Rio</button>
+                </div>
+                <!-- Add more filter options here -->
+                <hr>
+                <h5>Atividades</h5>
+                <div class="button-grid">
+                    <label class="checkbox-container">
+                        <input id="campingchecknatureza" type="checkbox" class="checkbox" data-type="Camping" onclick="filterLocations()">
+                        <span class="checkmark">Camping</span>
+                    </label>
+                    <label class="checkbox-container">
+                        <input id="fotografiachecknatureza" type="checkbox" class="checkbox" data-type="Fotografia" onclick="filterLocations()">
+                        <span class="checkmark">Fotografia</span>
+                    </label>
+                    <label class="checkbox-container">
+                        <input id="meditachecknatureza" type="checkbox" class="checkbox" data-type="Meditação" onclick="filterLocations()">
+                        <span class="checkmark">Anti-stress</span>
+                    </label>
+                    <label class="checkbox-container">
+                        <input id="caminhadachecknatureza" type="checkbox" class="checkbox" data-type="Caminhada" onclick="filterLocations()">
+                        <span class="checkmark">Caminhada</span>
+                    </label>
+                </div>
+                <h5>Características</h5>
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input id="animalnatureza" type="checkbox" class="checkbox" data-type="Animal" onclick="filterLocations()">
+                        
+                        <span>Vida Animal</span>
+                    </label>
+                    <br>
+                    <label class="checkbox-label">
+                        <input id="poucomovenatureza" type="checkbox" class="checkbox" data-type="PoucoMovimento" onclick="filterLocations()">
+                        <span>Pouco Movimento</span>
+                    </label>
+                    <br><br><br><br>
+                </div>
+    </div>
+</div>
+
+<button class="showresults" id="resultsbtn" onclick="showResults()"><span class="checkmark">Ver Resultados</span></button>
+    <div class="filtros-barra">
+        <label id="naturezabtn" class="checkbox-container">
+            <input id="naturezabtn" class="ctime" type="checkbox" onclick="filterLocations()">
+            <i class="fas fa-tree"></i>
+            <span>Natureza</span>
+        </label>
+        <label id="culturabtn" class="checkbox-container">
+            <input id="culturabtn" class="ctime" type="checkbox" onclick="filterLocations()">
+            <i class="fas fa-landmark"></i>
+            <span>Cultura</span>
+        </label>
+        <label id="praiabtn" class="checkbox-container">
+            <input id="praiabtn" type="checkbox" class="ctime" onclick="filterLocations()">
+            <i class="fas fa-umbrella-beach"></i>
+            <span>Praia</span>
+        </label>
+        <label id="trilhobtn" class="checkbox-container">
+            <input id="trilhobtn" type="checkbox" class="ctime" onclick="filterLocations()">
+            <i class="fas fa-hiking"></i>
+            <span>Trilho</span>
+        </label>
+        <label id="merendasbtn" class="checkbox-container">
+            <input id="merendasbtn" type="checkbox" class="ctime" onclick="filterLocations()">
+            <i class="fas fa-utensils"></i>
+            <span>Merendas</span>
+        </label>
+        <label class="checkbox-container">
+            <input id="merendasbtn" type="checkbox" class="ctime" onclick="filterbtn()">
+            <i class="fas fa-search"></i>
+            <span>Pesquisa</span>
+        </label>
+        <label class="checkbox-container">
+            <input id="merendasbtn" type="checkbox" class="ctime" onclick="window.location.href='/favorites.html'">
+            <i class="fas fa-star"></i>
+            <span>Favoritos</span>
+        </label>
+        <label id="mapabtn" class="checkbox-container">
+            <input id="merendabtn" type="checkbox" class="ctime" onclick="mapbtn()">
+            <i class="fas fa-map"></i>
+            <span>Mapa</span>
+        </label>
+        <label id="listabtn" class="checkbox-container">
+            <input id="merendasbtn" type="checkbox" class="ctime" onclick="listabtn()">
+            <i class="fas fa-map"></i>
+            <span>Lista</span>
+        </label>
+        <label class="checkbox-container">
+            <input id="merendasbtn" type="checkbox" class="ctime" onclick="register()">
+            <i class="fas fa-user"></i>
+            <span>Perfil</span>
+        </label>
+    </div>
+</body>
+<script src="locais.js"></script>
+</html>

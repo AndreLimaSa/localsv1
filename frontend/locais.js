@@ -854,7 +854,7 @@ function register() {
   const BASE_URL =
     window.location.hostname === "localhost"
       ? "http://localhost:3000"
-      : "https://localsapp-2.onrender.com";
+      : "https://localsv1.onrender.com";
   window.open(`${BASE_URL}/register`, "_blank");
 }
 

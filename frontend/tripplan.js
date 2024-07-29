@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
     updateDayOptions(daySelector);
 
     const addButton = document.createElement("button");
-    addButton.textContent = "Add to Day";
+    addButton.innerHTML = "&#43;"; // Unicode for plus sign
     addButton.onclick = () => {
       const selectedDay = parseInt(daySelector.value);
       if (!isNaN(selectedDay)) {
@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
             event.dataTransfer.setData("text/plain", JSON.stringify(location));
           });
           const removeButton = document.createElement("button");
-          removeButton.textContent = "Remove";
+          removeButton.innerHTML = "&#10005;"; // Unicode for "X"
           removeButton.onclick = () => removeFromDay(location, day);
           listItem.appendChild(removeButton);
           locationList.appendChild(listItem);
@@ -190,7 +190,7 @@ document.addEventListener("DOMContentLoaded", () => {
       dayContainer.className = "day-container";
       dayContainer.id = `day-${i}`;
       dayContainer.innerHTML = `
-        <h3>Day ${i}</h3>
+        <h3>Dia ${i}</h3>
         <ul class="day-location-list"></ul>
       `;
       tripPlanner.appendChild(dayContainer);

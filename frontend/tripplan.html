@@ -13,17 +13,26 @@
     <script src="/node_modules/leaflet/dist/leaflet.js"></script>
     <!-- Marker Cluster JS -->
     <script src="/node_modules/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="tripplan.css">
 </head>
 <body>
-    <div id="map" style="height: 500px;"></div>
+    <div id="map"></div>
+    <div id="top-container">
     <div id="dayscontainer">
-        <label for="num-days">Number of days:</label>
-        <input type="number" id="num-days" min="1">
-        <button id="generate-days">Generate Days</button>
+        <h1>A tua Viagem!</h1>
+        <label for="num-days"><h5>Quantos dias de férias?</h5></label>
+        <input type="number" id="num-days" min="1" placeholder="número de dias...">
+        <button id="generate-days"><span class="arrow">&#8594;</span></button>
     </div>
+</div>
     <div id="trip-planner"></div>
-    <button id="save-trip">Save Trip</button>
+    <button id="save-trip">Guardar</button>
+
     <script src="tripplan.js"></script>
 </body>
 </html>

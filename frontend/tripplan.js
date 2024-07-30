@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const generateDaysButton = document.getElementById("generate-days");
   const tripPlanner = document.getElementById("trip-planner");
   const saveTripButton = document.getElementById("save-trip");
+  const daysContainer = document.getElementById("dayscontainer");
 
   let favoriteLocations = [];
   let tripData = {
@@ -184,7 +185,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function generateDailyContainers(numDays) {
     tripPlanner.innerHTML = "";
-
+    tripPlanner.style.display = "flex";
     for (let i = 1; i <= numDays; i++) {
       const dayContainer = document.createElement("div");
       dayContainer.className = "day-container";
@@ -209,6 +210,7 @@ document.addEventListener("DOMContentLoaded", () => {
         locations: [],
       }));
       generateDailyContainers(numDays);
+      daysContainer.style.display = "none";
       console.log("Generated daily containers for days:", numDays);
 
       markers.eachLayer((marker) => {

@@ -1,6 +1,6 @@
 body{
   margin: 0;
-  padding: 0;
+  padding-bottom: 8vh;
 }
 h1, h2, h3, p{
   margin: 0;
@@ -185,18 +185,24 @@ h1, h2, h3, p{
   border: none;
   
 }
-.filtros-barra{
+.filtros-barra {
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: hsl(0, 0%, 15%);
-  width: 100vw;
-  height: 8vh;
+  width: 100%;
+  height: 8vh; /* We'll adjust this with JS */
   border-top: solid 1px hsl(0, 0%, 80%);
   color: black;
-  margin-bottom: 0px;
-  border-radius:0;
-  gap: 20px;
+  margin-bottom: 0;
+  border-radius: 0;
+  gap: 10px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow-x: auto; /* Allow horizontal scrolling if needed */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
 }
 #image-grid {
   display: grid;

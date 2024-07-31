@@ -1073,3 +1073,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
   loadFavoriteLocations();
 });
+
+function adjustForVisualViewport() {
+  const filtrosBar = document.querySelector(".filtros-barra");
+  const vh = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty("--vh", `${vh}px`);
+
+  filtrosBar.style.height = `calc(var(--vh, 1vh) * 8)`;
+  filtrosBar.style.bottom = `${window.visualViewport.offsetTop}px`;
+}
+
+window.visualViewport.addEventListener("resize", adjustForVisualViewport);
+window.visualViewport.addEventListener("scroll", adjustForVisualViewport);
+
+// Initial call
+adjustForVisualViewport();

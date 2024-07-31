@@ -163,7 +163,7 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("Saving trip data:", tripData);
 
     try {
-      const response = await fetch("/save-trip", {
+      const response = await fetch("https://localsv1.onrender.com/save-trip", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

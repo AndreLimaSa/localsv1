@@ -160,26 +160,60 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function saveTrip() {
+    // Ensure userId is not null
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      console.error("User ID is missing");
+      alert("Please log in before saving a trip.");
+      return;
+    }
+
+    // Ensure there's at least one day with locations
+    if (
+      !tripData.days ||
+      tripData.days.length === 0 ||
+      tripData.days[0].locations.length === 0
+    ) {
+      console.error("No locations added to the trip");
+      alert("Please add at least one location to your trip before saving.");
+      return;
+    }
+
+    // Add userId to tripData
+    tripData.userId = userId;
+
     console.log("Saving trip data:", tripData);
 
     try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
       const response = await fetch("https://localsv1.onrender.com/save-trip", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(tripData),
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorData = await response.json();
+        throw new Error(
+          `HTTP error! status: ${response.status}, message: ${
+            errorData.error || "Unknown error"
+          }`
+        );
       }
 
+      const result = await response.json();
+      console.log("Trip saved successfully:", result);
       alert("Trip saved successfully!");
     } catch (error) {
       console.error("Error saving trip:", error);
-      alert("Failed to save trip. Please try again.");
+      alert(`Failed to save trip: ${error.message}`);
     }
   }
 

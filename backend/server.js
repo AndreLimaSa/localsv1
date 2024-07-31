@@ -307,10 +307,8 @@ app.post("/save-trip", auth, async (req, res) => {
   try {
     const { userId, days } = req.body;
 
-    if (!userId || !days) {
-      return res
-        .status(400)
-        .json({ error: "User ID and days must be provided" });
+    if (!userId || !days || !Array.isArray(days) || days.length === 0) {
+      return res.status(400).json({ error: "Invalid trip data" });
     }
 
     const trip = new Trip({
@@ -319,10 +317,10 @@ app.post("/save-trip", auth, async (req, res) => {
     });
 
     await trip.save();
-    res.status(201).json({ message: "Trip saved successfully!" });
+    res.status(200).json({ message: "Trip saved successfully" });
   } catch (error) {
     console.error("Error saving trip:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 

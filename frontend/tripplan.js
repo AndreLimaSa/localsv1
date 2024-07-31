@@ -162,8 +162,9 @@ document.addEventListener("DOMContentLoaded", () => {
   async function saveTrip() {
     // Ensure userId is not null
     const userId = localStorage.getItem("userId");
-    if (!userId) {
-      console.error("User ID is missing");
+    const token = localStorage.getItem("token");
+    if (!userId || !token) {
+      console.error("User ID or token is missing");
       alert("Please log in before saving a trip.");
       return;
     }
@@ -186,6 +187,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       const token = localStorage.getItem("token");
+      const userId = localStorage.getItem("userId");
       if (!token) {
         throw new Error("No authentication token found");
       }

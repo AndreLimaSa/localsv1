@@ -826,7 +826,7 @@ async function getFavorites() {
 }
 
 async function login(email, password) {
-  const response = await fetch("/login", {
+  const response = await fetch("https://localsv1.onrender.com/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
@@ -835,6 +835,7 @@ async function login(email, password) {
   const data = await response.json();
   if (response.ok) {
     localStorage.setItem("token", data.token);
+    localStorage.setItem("userId", data.userId);
     window.location.href = "/index.html"; // Redirect after successful login
   } else {
     alert(data.message);

@@ -213,6 +213,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const result = await response.json();
       console.log("Trip saved successfully:", result);
       alert("Trip saved successfully!");
+
+      // Show the "Ver Viajes" button
+      document.getElementById("show-trips").style.display = "inline-block";
     } catch (error) {
       console.error("Error saving trip:", error);
       alert(`Failed to save trip: ${error.message}`);

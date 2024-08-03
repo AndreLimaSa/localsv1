@@ -216,6 +216,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Show the "Ver Viajes" button
       document.getElementById("show-trips").style.display = "inline-block";
+      document.getElementById("save-trip").style.display = "none";
     } catch (error) {
       console.error("Error saving trip:", error);
       alert(`Failed to save trip: ${error.message}`);

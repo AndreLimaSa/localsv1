@@ -221,8 +221,10 @@ h5{
     position: absolute;
     text-align: center;
     align-items: center;
+    background-color: hsl(0, 0%, 10%);
+    color: white;
     top: 25vh;
-    left: 180px;
+    left: 80px;
     z-index: 30;
     padding: 10px 40px;
     border-radius: 10px;

@@ -768,7 +768,7 @@ background-color: hsl(0, 0%, 95%);
   position: absolute;
   width: 100vw;
   height: 6vh;
-  bottom: 0vh;
+  bottom: 8vh;
   z-index: 10000000000000000000000000000000000;
   padding-left: -100px;
   border: none;

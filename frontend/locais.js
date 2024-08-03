@@ -43,7 +43,7 @@ function initializeMap() {
 
     // Use CircleMarker instead of Circle
     const circleMarker = L.circleMarker(e.latlng, {
-      radius: 10, // Size in pixels
+      radius: 100, // Size in pixels
       color: "blue",
       fillColor: "#3388ff",
       fillOpacity: 0.2,

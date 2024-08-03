@@ -34,14 +34,23 @@ function initializeMap() {
   map.addLayer(markerClusterGroup);
 
   function onLocationFound(e) {
-    const radius = e.accuracy / 2;
+    const accuracy = e.accuracy / 2;
 
     L.marker(e.latlng)
       .addTo(map)
-      .bindPopup(`You are within ${radius} meters from this point`)
+      .bindPopup(`You are within ${accuracy} meters from this point`)
       .openPopup();
 
-    L.circle(e.latlng, radius).addTo(map);
+    // Use CircleMarker instead of Circle
+    const circleMarker = L.circleMarker(e.latlng, {
+      radius: 10, // Size in pixels
+      color: "blue",
+      fillColor: "#3388ff",
+      fillOpacity: 0.2,
+      weight: 2,
+    }).addTo(map);
+
+    // Add a tooltip to show the actual accuracy
 
     map.setView(e.latlng, 13);
   }
